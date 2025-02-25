@@ -24,6 +24,10 @@ class BookResource extends Resource implements HasShieldPermissions
 
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
 
+    protected static ?string $navigationlabel = 'Book';
+
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function getPermissionPrefixes(): array
     {
         return [

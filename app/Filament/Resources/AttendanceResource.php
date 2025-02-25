@@ -26,6 +26,7 @@ class AttendanceResource extends Resource
     protected static ?string $model = Attendance::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['user_id'] = Auth::id();
@@ -63,8 +64,8 @@ class AttendanceResource extends Resource
     {
         return $table
             ->headerActions([
-                Action::make('generate-daily-attendance')
-                    ->label('Generate Absensi Harian Hadir')
+                Action::make('generate daily attendance')
+                    ->label('Generate Daily Attendance')
                     ->action(function () {
                         $students = Student::all();
                         $today = Carbon::today();
@@ -84,7 +85,7 @@ class AttendanceResource extends Resource
                             }
                         }
 
-                        session()->flash('message', 'Absensi harian hadir berhasil digenerate!');
+                        session()->flash('message', 'Attendance generated successfully!');
                     })
                     ->icon('heroicon-o-check-circle')
                     ->requiresConfirmation()
@@ -92,13 +93,13 @@ class AttendanceResource extends Resource
             ->query(Attendance::query())
             ->columns([
                 Tables\Columns\TextColumn::make('student.name')
-                    ->label('Siswa')
+                    ->label('Name')
                     ->searchable(),
 
 
 
                 Tables\Columns\TextColumn::make('student.class_room.name')
-                    ->label('Kelas')
+                    ->label('Class')
                     ->searchable()
                     ->sortable(),
 
@@ -108,11 +109,14 @@ class AttendanceResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('date')
-                    ->label('Tanggal')
+                    ->label('Date')
+                    ->date('d-m-Y')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('user.name')
-                    ->label('Petugas')
+                    ->label('Created By')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('student_id')
@@ -133,6 +137,7 @@ class AttendanceResource extends Resource
                     ),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
