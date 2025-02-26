@@ -9,7 +9,9 @@ class Presensi extends ChartWidget
 {
     protected static ?string $heading = 'Chart attendance this month';
 
-    protected int | string | array $columnSpan = 'full';
+    protected int | string | array $columnSpan = '2';
+
+    protected static ?string $maxHeight = '370px';
 
     protected static ?int $sort = 2;
 
