@@ -117,17 +117,22 @@ class AttendanceResource extends Resource
                     ->label('Created By')
                     ->searchable()
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created At')
+                    ->dateTime()
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('student_id')
-                    ->label('Siswa')
+                    ->label('Student')
                     ->relationship('student', 'name')
                     ->searchable(),
 
                 Tables\Filters\Filter::make('date')
                     ->form([
-                        Forms\Components\DatePicker::make('from')->label('Dari Tanggal'),
-                        Forms\Components\DatePicker::make('until')->label('Sampai Tanggal'),
+                        Forms\Components\DatePicker::make('from')->label('From Date'),
+                        Forms\Components\DatePicker::make('until')->label('To Date'),
                     ])
                     ->query(
                         fn($query, array $data) =>

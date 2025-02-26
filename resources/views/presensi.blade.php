@@ -181,14 +181,14 @@
                                 <tbody>
                                     @foreach ($attendance as $record)
                                         <tr>
-                                            <td>{{ $record->date }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($record->date)->format('d-m-Y') }}</td>
                                             <td>
                                                 <span
                                                     class="status-badge
-                                                    @if ($record->status == 'Hadir') bg-success text-white
+                                                    @if ($record->status == 'Hadir') bg-success
                                                     @elseif($record->status == 'Izin') bg-warning text-dark
-                                                    @elseif($record->status == 'Sakit') bg-info text-white
-                                                    @else bg-danger text-white @endif">
+                                                    @elseif($record->status == 'Sakit') bg-info
+                                                    @else bg-danger @endif">
                                                     {{ $record->status }}
                                                 </span>
                                             </td>
