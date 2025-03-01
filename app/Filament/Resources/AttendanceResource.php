@@ -129,6 +129,14 @@ class AttendanceResource extends Resource
                     ->sortable(),
             ])
             ->filters([
+                Tables\Filters\TernaryFilter::make('today')
+                    ->label('Today')
+                    ->trueLabel('Just Today Data')
+                    ->falseLabel('All Data')
+                    ->queries(
+                        true: fn($query) => $query->whereDate('date', Carbon::today()),
+                        false: fn($query) => $query
+                    ),
                 Tables\Filters\SelectFilter::make('student_id')
                     ->label('Student')
                     ->relationship('student', 'name')
@@ -155,15 +163,7 @@ class AttendanceResource extends Resource
                             ->when($data['from'] ?? null, fn($q, $from) => $q->whereDate('date', '>=', $from))
                             ->when($data['until'] ?? null, fn($q, $until) => $q->whereDate('date', '<=', $until))
                     ),
-                // Filter hanya untuk hari ini
-                Tables\Filters\TernaryFilter::make('today')
-                    ->label('Today')
-                    ->trueLabel('Just Today Data')
-                    ->falseLabel('All Data')
-                    ->queries(
-                        true: fn($query) => $query->whereDate('date', Carbon::today()),
-                        false: fn($query) => $query
-                    ),
+
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
