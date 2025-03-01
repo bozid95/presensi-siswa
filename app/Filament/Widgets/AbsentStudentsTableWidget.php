@@ -27,17 +27,17 @@ class AbsentStudentsTableWidget extends BaseWidget
             )
             ->columns([
                 TextColumn::make('student.name')
-                    ->label('Nama Siswa')
+                    ->label('Student Name')
                     ->sortable(),
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()
                     ->formatStateUsing(fn($state) => ucfirst(str_replace('_', ' ', $state))),
                 TextColumn::make('student.class_room.name')
-                    ->label('Kelas')
+                    ->label('Class')
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->label('Tanggal')
+                    ->label('Date')
                     ->date(),
             ]);
     }
