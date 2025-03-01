@@ -20,6 +20,7 @@ use Carbon\Carbon;
 use Filament\Tables\Actions\Action;
 use App\Models\Student;
 use Filament\Tables\Actions\InlineEditAction;
+use Filament\Tables\Actions\ActionGroup;
 
 
 class AttendanceResource extends Resource
@@ -166,9 +167,11 @@ class AttendanceResource extends Resource
 
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
