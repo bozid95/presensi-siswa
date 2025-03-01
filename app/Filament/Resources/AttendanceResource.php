@@ -19,6 +19,7 @@ use Filament\Tables\Columns\Summarizers\Concatenate;
 use Carbon\Carbon;
 use Filament\Tables\Actions\Action;
 use App\Models\Student;
+use Filament\Tables\Actions\InlineEditAction;
 
 
 class AttendanceResource extends Resource
@@ -96,15 +97,19 @@ class AttendanceResource extends Resource
                     ->label('Name')
                     ->searchable(),
 
-
-
                 Tables\Columns\TextColumn::make('student.class_room.name')
                     ->label('Class')
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('status')
+                Tables\Columns\SelectColumn::make('status')
                     ->label('Status')
+                    ->options([
+                        'Hadir' => 'Hadir',
+                        'Izin' => 'Izin',
+                        'Sakit' => 'Sakit',
+                        'Alpa' => 'Alpa',
+                    ])
                     ->searchable()
                     ->sortable(),
 
@@ -128,6 +133,9 @@ class AttendanceResource extends Resource
                     ->label('Student')
                     ->relationship('student', 'name')
                     ->searchable(),
+                Tables\Filters\SelectFilter::make('class_room_id')
+                    ->label('Class')
+                    ->relationship('student.class_room', 'name'),
                 Tables\Filters\SelectFilter::make('status')
                     ->label('Status')
                     ->options([
@@ -147,6 +155,15 @@ class AttendanceResource extends Resource
                             ->when($data['from'] ?? null, fn($q, $from) => $q->whereDate('date', '>=', $from))
                             ->when($data['until'] ?? null, fn($q, $until) => $q->whereDate('date', '<=', $until))
                     ),
+                // Filter hanya untuk hari ini
+                Tables\Filters\TernaryFilter::make('today')
+                    ->label('Today')
+                    ->trueLabel('Just Today Data')
+                    ->falseLabel('All Data')
+                    ->queries(
+                        true: fn($query) => $query->whereDate('date', Carbon::today()),
+                        false: fn($query) => $query
+                    ),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -157,11 +174,6 @@ class AttendanceResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-
-
-
-
-
 
 
 
