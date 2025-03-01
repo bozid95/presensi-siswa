@@ -33,12 +33,17 @@ class StatsOverview extends BaseWidget
             ->whereBetween('date', [$today, $endOfDay])
             ->count(); // Jumlah siswa sakit hari ini
 
+        $totalExcused = Attendance::where('status', 'izin')
+            ->whereBetween('date', [$today, $endOfDay])
+            ->count(); // Jumlah siswa izin hari ini
+
         return [
             Stat::make('Students', $totalStudents),
             Stat::make('Attendance Today', $totalAttendance),
             Stat::make('Students Present', $totalPresent),
             Stat::make('Students Alpha', $totalAlpa),
             Stat::make('Students Sick', $totalSick),
+            Stat::make('Students Excused', $totalExcused),
         ];
     }
 }

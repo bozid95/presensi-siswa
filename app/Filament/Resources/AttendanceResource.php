@@ -128,7 +128,14 @@ class AttendanceResource extends Resource
                     ->label('Student')
                     ->relationship('student', 'name')
                     ->searchable(),
-
+                Tables\Filters\SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        'Hadir' => 'Hadir',
+                        'Izin' => 'Izin',
+                        'Sakit' => 'Sakit',
+                        'Alpa' => 'Alpa',
+                    ]),
                 Tables\Filters\Filter::make('date')
                     ->form([
                         Forms\Components\DatePicker::make('from')->label('From Date'),
