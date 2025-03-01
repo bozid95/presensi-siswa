@@ -6,6 +6,7 @@ use App\Models\Student;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
+use Illuminate\Validation\Rule;
 
 use App\Models\ClassRoom;
 use Filament\Tables\Columns\TextColumn;
@@ -26,19 +27,35 @@ class StudentImporter extends Importer
             ImportColumn::make('nisn')
                 ->numeric()
                 ->requiredMapping()
-                ->rules(['required', 'max:10']),
+                ->rules([
+                    'required',
+                    'digits_between:1,10',
+                    Rule::unique('students', 'nisn') // Pastikan NISN unik
+                ]),
             ImportColumn::make('kelas')
                 ->requiredMapping()
                 ->relationship('class_room', 'name')
         ];
     }
-
     public function resolveRecord(): ?Student
     {
+        // Cari student berdasarkan NISN yang diimport
+        $nisn = $this->data['nisn'] ?? null;
 
+        if (!$nisn) {
+            return null; // Jika tidak ada NISN, lewati
+        }
 
-        return new Student();
+        // Cek apakah student sudah ada berdasarkan NISN
+        $existingStudent = Student::where('nisn', $nisn)->first();
+
+        if ($existingStudent) {
+            return null; // Jika sudah ada, skip (tidak membuat duplikat)
+        }
+
+        return new Student(); // Jika belum ada, buat data baru
     }
+
 
     public static function getCompletedNotificationBody(Import $import): string
     {
